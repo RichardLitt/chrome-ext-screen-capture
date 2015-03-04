@@ -1,6 +1,7 @@
 /* globals chrome */
 var $ = require('jquery')
 
+/* Require and execute this function in your background page */
 var backgroundPage = function () {
   chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.name === 'screenshot') {
@@ -37,6 +38,7 @@ var takeScreenshot = function (callback) {
 /* Returns a canvas containing a screenshot of $element */
 var renderPreview = function ($element, $screenshotCanvas) {
   var previewCanvas = document.createElement('canvas')
+  previewCanvas.id = 'rendered'
   previewCanvas.width = $element.width()
   previewCanvas.height = $element.height()
 
@@ -51,7 +53,7 @@ var renderPreview = function ($element, $screenshotCanvas) {
     $element.width(), $element.height()
   )
 
-  return $(previewCanvas).css({ border: '1px solid black' })
+  return previewCanvas
 }
 
 module.exports.backgroundPage = exports.backgroundPage = backgroundPage
