@@ -35,23 +35,41 @@ var takeScreenshot = function (callback) {
   })
 }
 
-/* Returns a canvas containing a screenshot of $element */
-var renderPreview = function ($element, $screenshotCanvas) {
+/**
+ * Returns a canvas containing a screenshot of $element
+ * @param  {object} Should be either jQuery object or getBoundingClientRect()
+ * @param  {jQuery object} Should be a $canvas object
+ * @param  {object} Currently accepts a padding option only, as int
+ * @return {[type]}
+ */
+var renderPreview = function (element, $screenshotCanvas, options) {
+  var width, height, prevTop, prevLeft
+
+  var padding = (options && options.padding) ? options.padding : 0
+
+  /* If a jQuery object */
+  if (element instanceof $) {
+    width = element.width() + padding
+    height = element.height() + padding
+
+    // Calculate the correct position of the element on the canvas
+    prevTop = element.offset().top - $screenshotCanvas.data('scrollTop') - (padding / 2)
+    prevLeft = element.offset().left - $screenshotCanvas.data('scrollLeft') - (padding / 2)
+  /* If a getBoundingClientRect() object */
+  } else {
+    width = element.width + padding
+    height = element.height + padding
+    prevTop = element.top - $screenshotCanvas.data('scrollTop') - (padding / 2)
+    prevLeft = element.left - $screenshotCanvas.data('scrollLeft') - (padding / 2)
+  }
+
   var previewCanvas = document.createElement('canvas')
   previewCanvas.id = 'rendered'
-  previewCanvas.width = $element.width()
-  previewCanvas.height = $element.height()
-
-  // Calculate the correct position of the element on the canvas
-  var prevTop = $element.offset().top - $screenshotCanvas.data('scrollTop')
-  var prevLeft = $element.offset().left - $screenshotCanvas.data('scrollLeft')
+  previewCanvas.width = width
+  previewCanvas.height = height
 
   var ctx = previewCanvas.getContext('2d')
-  ctx.drawImage($screenshotCanvas[0], prevLeft, prevTop,
-    $element.width(), $element.height(),
-    0, 0,
-    $element.width(), $element.height()
-  )
+  ctx.drawImage($screenshotCanvas[0], prevLeft, prevTop, width, height, 0, 0, width, height)
 
   return previewCanvas
 }
