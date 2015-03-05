@@ -1,7 +1,7 @@
 # chrome-ext-screen-capture
 Capture screen from a chrome extension
 
-This is code borrowed from Louis Li and [his post](http://louisrli.github.io/blog/2013/01/16/javascript-canvas-screenshot/). 
+## Installation
 
 In your `manifest.json` file, include the following: 
 
@@ -11,3 +11,26 @@ In your `manifest.json` file, include the following:
     "scripts": ["background.js"]
 }
 ```
+
+In your background page, put the following:
+
+```js
+require('chrome-ext-screen-capture').backgroundPage()
+```
+
+In your content script, the following will return an img url:
+
+```js
+var cesc = require('chrome-ext-screen-capture')
+
+cesc.takeScreenshot(function (canvas) {
+  /* You can use either a getBoundingClientRect() function or any individual jQuery object */
+  var selection = document.getSelection().getRangeAt(0).getBoundingClientRect()
+  var imgURL = cesc.renderPreview(selection, canvas, {padding: 20}).toDataURL('image/png')
+  console.log('Check this out', imgURL)
+})
+```
+
+## Acknowledgments
+
+Much of this code was originally sourced from Louis Li and [his post](http://louisrli.github.io/blog/2013/01/16/javascript-canvas-screenshot/). 
