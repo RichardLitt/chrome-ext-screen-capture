@@ -5,7 +5,12 @@ var $ = require('jquery')
 var backgroundPage = function () {
   chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.name === 'screenshot') {
-      chrome.tabs.captureVisibleTab(null, null, function (dataUrl) {
+      var targetWindow = request.targetWindow || null
+      var options = {
+        'format': request.format || null,
+        'quality': request.quality || null
+      }
+      chrome.tabs.captureVisibleTab(targetWindow, options, function (dataUrl) {
         sendResponse({ screenshotUrl: dataUrl })
       })
     }
@@ -13,9 +18,16 @@ var backgroundPage = function () {
   })
 }
 
-/* Takes a screenshot and uses it in a callback as a canvas */
-var takeScreenshot = function (callback) {
-  chrome.extension.sendMessage({name: 'screenshot'}, function (response) {
+/**
+ * Takes a screenshot and uses it in a callback as a canvas
+ * @param  {object}   options: targetWindow, format, quality
+ * For more: https://developer.chrome.com/extensions/tabs#method-captureVisibleTab
+ * @param  {Function} callback
+ */
+var takeScreenshot = function (options, callback) {
+  options = options || {}
+  options.name = 'screenshot'
+  chrome.extension.sendMessage(options, function (response) {
     var data = response.screenshotUrl
     var canvas = document.createElement('canvas')
     var img = new Image()
@@ -40,7 +52,7 @@ var takeScreenshot = function (callback) {
  * @param  {object} Should be either jQuery object or getBoundingClientRect()
  * @param  {jQuery object} Should be a $canvas object
  * @param  {object} Currently accepts a padding option only, as int
- * @return {[type]}
+ * @return {canvas}
  */
 var renderPreview = function (element, $screenshotCanvas, options) {
   var width, height, prevTop, prevLeft
