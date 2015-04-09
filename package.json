@@ -1,6 +1,6 @@
 {
   "name": "chrome-ext-screen-capture",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Capture screen from within a Chrome extension",
   "main": "index.js",
   "dependencies": {
