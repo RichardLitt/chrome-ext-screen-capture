@@ -1,4 +1,6 @@
 # chrome-ext-screen-capture
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/RichardLitt/chrome-ext-screen-capture.svg)](https://greenkeeper.io/)
 Capture screen from a chrome extension
 
 ## Installation
