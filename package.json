@@ -4,7 +4,7 @@
   "description": "Capture screen from within a Chrome extension",
   "main": "index.js",
   "dependencies": {
-    "jquery": "^2.1.3"
+    "jquery": "^3.2.1"
   },
   "devDependencies": {},
   "scripts": {
